@@ -4,17 +4,8 @@
 #if 01
 using namespace std;
 int N, M, l;
-int arr[55][55];
+string arr[55];
 
-void input_arr(void) {
-	string s;
-	for (int i = 0; i < N; ++i) {
-		cin >> s;
-		for (int j = 0; j < M; ++j) {
-			arr[i][j] = s[j] - '0';
-		}
-	}
-}
 int solve(void) {
 	int max_len = min(N, M);
 	for (int len = max_len; len > 1; --len) {
@@ -30,7 +21,7 @@ int solve(void) {
 }
 int main(void) {
 	cin >> N >> M;
-	input_arr();
+	for (int i = 0; i < N; ++i) cin >> arr[i];
 	cout << solve();
 	return 0;
 }
