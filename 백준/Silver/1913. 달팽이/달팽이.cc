@@ -1,61 +1,69 @@
 #include <iostream>
 // b1913. 달팽이
-#if 01
+
 using namespace std;
 int N, M;
 int arr[1000 + 1][1000 + 1];
-int ans_r, ans_c;
 
-// 방향: 하 우 상 좌
-int dir = 0; // 초기 방향: 아래
-int dr[4] = { 1, 0, -1, 0 };
+// 상 우 하 좌
+int dr[4] = { -1, 0, 1, 0 };
 int dc[4] = { 0, 1, 0, -1 };
+int dir = 0; // 초기: 상
+int cnt = 0;
+int max_cnt = 1; // 초기: 1
+int flag = 0;
+int cr, cc, nr, nc;
+int find_r, find_c;
 
 void input(void) {
-	cin >> N; 
-	cin >> M; // 찾을 자연수
+	cin >> N >> M;
 }
 
-void solve(void) {
-	// 맨 왼쪽 위 좌표를 (0,0)으로
-	int cr = 0, cc = 0; 
-	int nr, nc;
-	// 시작은 맨 왼쪽 위부터
-	for (int n = N * N; n >= 1; --n) {
-		// 다음 좌표 계산
-		arr[cr][cc] = n;
+void solve(void){
+	cr = N / 2;
+	cc = N / 2;
 
-		// 찾는 자연수인지 체크
-		if (n == M) {
-			ans_r = cr;
-			ans_c = cc;
+	for (int i = 1; i <= N * N; ++i) {
+		if (i == M) {
+			// 좌표 offset 맞춰주기
+			find_r = cr + 1;
+			find_c = cc + 1;
 		}
+		arr[cr][cc] = i;
 		nr = cr + dr[dir];
 		nc = cc + dc[dir];
-		
-		// 범위 밖 또는 값이 있으면 -> 방향 바꾸기
-		if (nr < 0 || nr >= N || nc < 0 || nc >= N || arr[nr][nc] != 0) {
+
+		if (++cnt == max_cnt) {
+			// 방향 전환
 			dir = (dir + 1) % 4;
-			cr = cr + dr[dir];
-			cc = cc + dc[dir];
+			cnt = 0;
+
+			// max_cnt update
+			if (flag == 1) {
+				flag = 0;
+				max_cnt++;
+			}
+			else flag = 1;
 		}
-		else {
-			cr = nr;
-			cc = nc;
-		}
-		
+
+		cr = nr;
+		cc = nc;
 	}
 }
-int main(void) {
-	input();
-	solve();
+
+void output(void) {
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
 			cout << arr[i][j] << ' ';
 		}
 		cout << '\n';
 	}
-	cout << ans_r + 1 << ' ' << ans_c + 1<< '\n';
+	cout << find_r << ' ' << find_c << '\n';
+}
+
+int main(void) {
+	input();
+	solve();
+	output();
 	return 0;
 }
-#endif
